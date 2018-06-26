@@ -1,1 +1,1 @@
-print("Hello, world!")
+Steamer().process(file: "petstore-expanded.yaml")
