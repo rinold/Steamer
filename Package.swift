@@ -9,10 +9,12 @@ let package = Package(
         .package(url: "https://github.com/rinold/SwaggerParser.git", from: "0.8.0"),
         .package(url: "https://github.com/jpsim/Yams.git", from: "1.0.0"),
         .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0-rc.2"),
+        .package(url: "https://github.com/vapor/console.git", from: "3.0.0"),
+        .package(url: "https://github.com/vapor/http.git", from: "3.0.0"),
     ],
     targets: [
         .target(
             name: "Steamer",
-            dependencies: ["SwaggerParser", "Yams", "Leaf"]),
+            dependencies: ["SwaggerParser", "Yams", "Command", "Console", "Leaf", "HTTP"]),
     ]
 )
