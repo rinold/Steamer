@@ -9,7 +9,7 @@ import HTTP
 
 extension String {
 
-    var convertToHttpScheme: HTTPScheme? {
+    var convertToHTTPScheme: HTTPScheme? {
         switch self {
         case "http":
             return .https

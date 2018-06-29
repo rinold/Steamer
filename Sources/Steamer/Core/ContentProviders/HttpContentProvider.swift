@@ -19,18 +19,18 @@ class HttpContentProvider: ContentProvider {
         group = MultiThreadedEventLoopGroup(numberOfThreads: 2)
     }
 
-    func canRead(document: String) -> Bool {
-        if let url = URL(string: document), false {
+    func canGetContents(of document: String) -> Bool {
+        if let url = URL(string: document) {
             return !url.isFileURL
         }
         return false
     }
 
-    func read(document: String) throws -> Future<String> {
+    func contents(of document: String) throws -> Future<Data> {
         guard let url = URL(string: document) else {
             throw SteamerError(description: "Can't create URL from: \(document)")
         }
-        guard let host = url.host, let scheme = url.scheme?.convertToHttpScheme else {
+        guard let host = url.host, let scheme = url.scheme?.convertToHTTPScheme else {
             throw SteamerError(description: "No URL host or scheme available in: \(document)")
         }
         try container.make(Console.self).info("Fetching: \(document)")
@@ -40,12 +40,7 @@ class HttpContentProvider: ContentProvider {
             guard response.isSuccessfull else {
                 throw SteamerError(description: "Unsuccessfull HTTP response: \(response.description)")
             }
-            guard let data = response.body.data,
-                let content = String(data: data, encoding: .utf8)
-            else {
-                return ""
-            }
-            return content
+            return response.body.data ?? Data()
         }
     }
 

@@ -9,3 +9,8 @@ struct SteamerError: Error {
     let description: String
 }
 
+extension SteamerError {
+    init() {
+        description = "Unknown error, thrown by lazy programmer :'("
+    }
+}

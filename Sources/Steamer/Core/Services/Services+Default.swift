@@ -26,7 +26,7 @@ extension Services {
             return try container.make(CommandConfig.self).resolve(for: container)
         }
 
-        // document readers
+        // document content providers
         services.register(FileContentProvider.self)
         services.register(HttpContentProvider.self)
         services.register { container -> ContentProviders in
@@ -34,6 +34,11 @@ extension Services {
             try providers.register(FileContentProvider.self)
             try providers.register(HttpContentProvider.self)
             return providers
+        }
+
+        // content adapter for parser
+        services.register(ContentAdapter.self) { container -> SwaggerAdapter in
+            return SwaggerAdapter(on: container)
         }
 
         return services

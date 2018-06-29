@@ -8,6 +8,7 @@
 import Service
 
 final class ContentProviders: Service {
+
     private let container: Container
     private var providers: [ContentProvider]
 
@@ -22,6 +23,6 @@ final class ContentProviders: Service {
     }
 
     func pick(for document: String) -> ContentProvider? {
-        return providers.first(where: { $0.canRead(document: document) })
+        return providers.first(where: { $0.canGetContents(of: document) })
     }
 }

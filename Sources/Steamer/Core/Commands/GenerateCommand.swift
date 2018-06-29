@@ -30,10 +30,13 @@ struct GenerateCommand: Command, ServiceType {
             let error = SteamerError(description: "No content provider available to read:\n\(document)")
             return context.container.future(error: error)
         }
-        return try contentProvider.read(document: document).do { documentContents in
-            context.console.success("Loaded \(documentContents.lengthOfBytes(using: .utf8)) bytes from: \(document)")
-        }.map { documentContents in
-            return
+        let contentAdapter = try context.container.make(ContentAdapter.self)
+        return try contentProvider
+            .contents(of: document)
+            .flatMap { data in
+                return try context.container.future(contentAdapter.adapt(content: data))
+            }.map { result in
+                print (result)
         }
     }
 

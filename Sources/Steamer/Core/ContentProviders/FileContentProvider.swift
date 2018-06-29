@@ -16,14 +16,20 @@ class FileContentProvider: ContentProvider {
         container = worker
     }
 
-    func canRead(document: String) -> Bool {
-        let fileUrl = URL(fileURLWithPath: document)
-        return FileManager.default.fileExists(atPath: fileUrl.path)
+    func canGetContents(of document: String) -> Bool {
+        let httpScheme = URL(string: document)?.scheme?.convertToHTTPScheme
+        return (httpScheme == nil)
     }
     
-    func read(document: String) throws -> Future<String> {
-        let contents = try String(contentsOfFile: document, encoding: .utf8)
-        return container.eventLoop.newSucceededFuture(result: contents)
+    func contents(of document: String) throws -> Future<Data> {
+        guard FileManager.default.fileExists(atPath: document) else {
+            let error = SteamerError(description: ":(")
+            let failedFuture: Future<Data> = container.future(error: error)
+            return failedFuture
+        }
+        let url = URL(fileURLWithPath: document)
+        let contents = try Data(contentsOf: url)
+        return container.future(contents)
     }
     
 }
